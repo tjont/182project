@@ -5,11 +5,17 @@ class Agent:
 	def getAction(self, state):
 		raiseNotDefined()
 
-class Directions:
+class Move:
 	NORTHWEST = 'Northwest'
 	NORTHEAST = 'Northeast'
 	SOUTHWEST = 'Southwest'
 	SOUTHEAST = 'Southeast'
+
+	def validMove(input_move):
+		inputs = input_move.split(' ')
+		if len(inputs) is not 2:
+			return False
+		
 
 class Board:
 	def __init__(self):
@@ -23,26 +29,23 @@ class Board:
 				 	  [1,0,1,0,1,0,1,0],
 					 ]
 
+		self.human = [(0,5),(2,5),(4,5),(6,5),(1,6),(3,6),(5,6),(7,6),(0,7),(2,7),(4,7),(6,7)]
+		self.computer = [(1,0),(3,0),(5,0),(7,0),(0,1),(2,1),(4,1),(6,1),(1,2),(3,2),(5,2),(7,2)]
+
 	def __str__(self):
 		""
-		board = ''
+		representation = {-2: 'X ', -1: 'x ', 0:'_ ', 1:'o ', 2:'O '}
+		board = 'A B C D E F G H \n'
+		counter = 1
 		for row in self.state:
 			for col in row:
-				if col == 1:
-					board += 'b '
-				if col == 2:
-					board += "B "
-				if col == -1:
-					board += 'w '
-				if col == -2:
-					board += 'W '
-				if col == 0:
-					board += 'O '
-			board+= '\n'
+				board += representation[col]
+			board+= ' ' + str(counter) + ' \n'
+			counter += 1
 		return board 
 
 class Game:
-	def __init__(self, board, agentType):
+	def __init__(self, board, agentType=None):
 		self.board = board
 		self.gameOver = False
 		self.agentType = agentType
@@ -51,8 +54,9 @@ class Game:
 		while not self.gameOver:
 			print self.board			
 			
-			move = raw_input("Make move: ")
-
+			input_move = raw_input("Make move: ")
+			while not Move.validMove(input_move):
+				input_move = raw_input("Input invalid: ")
 			# change the board somehow
 
 			# check what agentType we have 
