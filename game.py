@@ -38,33 +38,45 @@ class Board:
 			counter += 1
 		return board 
 
-	def generateValidMoves(self, who):
+	def generateValidMoves(self, who): # I am so sorry this is the literal embodiment of spaghetti code
 		valid_moves = []
 		valid_jumps = []
 		if who is 'computer':
 			for (x,y) in self.computer:
 				# SE
-				if self.state[x+1][y+1] == 0: # if empty square
-					valid_moves.append((x,y),'SE', 'M')
-				else if self.state[x+1][y+1] > 0 and self.state[x+2][y+2] == 0: # if can jump over
-					valid_jumps.append((x,y),'SE', 'J')
+				try:
+					if self.state[x+1][y+1] == 0: # if empty square
+						valid_moves.append(((x,y),'SE', 'M'))
+					elif self.state[x+1][y+1] > 0 and self.state[x+2][y+2] == 0: # if can jump over
+						valid_jumps.append(((x,y),'SE', 'J'))
+				except IndexError:
+					pass
 				# SW
-				if self.state[x+1][y-1] == 0: # if empty square
-					valid_moves.append((x,y),'SW', 'M')
-				else if self.state[x+1][y-1] > 0 and self.state[x+2][y-2] == 0: # if can jump over
-					valid_jumps.append((x,y),'SW', 'J')
+				try:
+					if self.state[x+1][y-1] == 0: # if empty square
+						valid_moves.append(((x,y),'SW', 'M'))
+					elif self.state[x+1][y-1] > 0 and self.state[x+2][y-2] == 0: # if can jump over
+						valid_jumps.append(((x,y),'SW', 'J'))
+				except IndexError:
+					pass
 				# if current square contains a king, consider north moves too
 				if self.state[x][y] == -2:
 					# NE
-					if self.state[x-1][y+1] == 0: # if empty square
-						valid_moves.append((x,y),'NE', 'M')
-					else if self.state[x-1][y+1] > 0 and self.state[x-2][y+2] == 0: # if can jump over
-						valid_jumps.append((x,y),'NE', 'J')
+					try:
+						if self.state[x-1][y+1] == 0: # if empty square
+							valid_moves.append(((x,y),'NE', 'M'))
+						elif self.state[x-1][y+1] > 0 and self.state[x-2][y+2] == 0: # if can jump over
+							valid_jumps.append(((x,y),'NE', 'J'))
+					except IndexError:
+						pass
 					# NW
-					if self.state[x-1][y-1] == 0: # if empty square
-						valid_moves.append((x,y),'NW', 'M')
-					else if self.state[x-1][y-1] > 0 and self.state[x-2][y-2] == 0: # if can jump over
-						valid_jumps.append((x,y),'NW', 'J')
+					try:
+						if self.state[x-1][y-1] == 0: # if empty square
+							valid_moves.append(((x,y),'NW', 'M'))
+						elif self.state[x-1][y-1] > 0 and self.state[x-2][y-2] == 0: # if can jump over
+							valid_jumps.append(((x,y),'NW', 'J'))
+					except IndexError:
+						pass
 			# if a jump can be made, the computer has to jump
 			if len(valid_jumps) > 0:
 				return valid_jumps
@@ -75,43 +87,58 @@ class Board:
 				# if current square contains king, consider south moves too
 				if self.state[x][y] == 2:
 					# SE
-					if self.state[x+1][y+1] == 0: # if empty square
-						valid_moves.append((x,y),'SE', 'M')
-					else if self.state[x+1][y+1] < 0 and self.state[x+2][y+2] == 0: # if can jump over
-						valid_jumps.append((x,y),'SE', 'J')
+					try:
+						if self.state[x+1][y+1] == 0: # if empty square
+							valid_moves.append(((x,y),'SE', 'M'))
+						elif self.state[x+1][y+1] < 0 and self.state[x+2][y+2] == 0: # if can jump over
+							valid_jumps.append(((x,y),'SE', 'J'))
+					except IndexError:
+						pass
 					# SW
-					if self.state[x+1][y-1] == 0: # if empty square
-						valid_moves.append((x,y),'SW', 'M')
-					else if self.state[x+1][y-1] < 0 and self.state[x+2][y-2] == 0: # if can jump over
-						valid_jumps.append((x,y),'SW', 'J')
+					try:
+						if self.state[x+1][y-1] == 0: # if empty square
+							valid_moves.append(((x,y),'SW', 'M'))
+						elif self.state[x+1][y-1] < 0 and self.state[x+2][y-2] == 0: # if can jump over
+							valid_jumps.append(((x,y),'SW', 'J'))
+					except IndexError:
+						pass
 				# NE
-				if self.state[x-1][y+1] == 0: # if empty square
-					valid_moves.append((x,y),'NE', 'M')
-				else if self.state[x-1][y+1] < 0 and self.state[x-2][y+2] == 0: # if can jump over
-					valid_jumps.append((x,y),'NE', 'J')
+				try:
+					if self.state[x-1][y+1] == 0: # if empty square
+						valid_moves.append(((x,y),'NE', 'M'))
+					elif self.state[x-1][y+1] < 0 and self.state[x-2][y+2] == 0: # if can jump over
+						valid_jumps.append(((x,y),'NE', 'J'))
+				except IndexError:
+					pass
 				# NW
-				if self.state[x-1][y-1] == 0: # if empty square
-					valid_moves.append((x,y),'NW', 'M')
-				else if self.state[x-1][y-1] < 0 and self.state[x-2][y-2] == 0: # if can jump over
-					valid_jumps.append((x,y),'NW', 'J')
+				try:
+					if self.state[x-1][y-1] == 0: # if empty square
+						valid_moves.append(((x,y),'NW', 'M'))
+					elif self.state[x-1][y-1] < 0 and self.state[x-2][y-2] == 0: # if can jump over
+						valid_jumps.append(((x,y),'NW', 'J'))
+				except IndexError:
+					pass
 			# if a jump can be made, the person has to jump
 			if len(valid_jumps) > 0:
 				return valid_jumps
 			else:
 				return valid_moves
 
-	def generateSuccessorBoard(self, pos, direction):
+	def generateSuccessorBoard(self, pos, direction, jump=False):
 		x, y = pos
 		piece = self.state[x][y]
+		dist = 1
+		if jump:
+			dist = 2
 		self.state[x][y] = 0
 		if direction == 'NW':
-			self.state[x-1][y-1] = piece
+			self.state[x-dist][y-dist] = piece
 		if direction == 'NE':
-			self.state[x-1][y+1] = piece
+			self.state[x-dist][y+dist] = piece
 		if direction == 'SE':
-			self.state[x+1][y+1] = piece
+			self.state[x+dist][y+dist] = piece
 		if direction == 'SW':
-			self.state[x+1][y-1] = piece
+			self.state[x+dist][y-dist] = piece
 
 
 class Game:
@@ -125,12 +152,15 @@ class Game:
 			print self.board			
 			
 			x, y = raw_input("Choose piece (format: x y): ").split()
+			x = int(x)
+			y = int(y)
 			direction = raw_input("Choose direction (format: NE or NW or SE or SW): ")
-			moves = generateValidMoves('human')
-			if ((x,y),direction,'M') in moves or ((x,y),direction,'J') in moves:
-				print "valid move"
+			moves = self.board.generateValidMoves('human')
 			# change the board somehow
-			self.board.generateSuccessorBoard((int(x),int(y)), direction)
+			if ((x,y),direction,'M') in moves:
+				self.board.generateSuccessorBoard((x,y),direction)
+			elif ((x,y),direction,'J') in moves:
+				self.board.generateSuccessorBoard((x,y),direction, True)
 
 			# check what agentType we have 
 				# make a move based on that agentType
