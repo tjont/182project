@@ -41,19 +41,36 @@ class Board:
 			board+= '\n'
 		return board 
 
+	def generateSuccessorBoard(self, pos, direction):
+		x, y = pos
+		piece = self.state[x][y]
+		self.state[x][y] = 0
+		if direction == 'NW':
+			self.state[x-1][y-1] = piece
+		if direction == 'NE':
+			self.state[x-1][y+1] = piece
+		if direction == 'SE':
+			self.state[x+1][y+1] = piece
+		if direction == 'SW':
+			self.state[x+1][y-1] = piece
+
+
 class Game:
-	def __init__(self, board, agentType):
+	# NEED TO ADD agent TYPE
+	def __init__(self, board):
 		self.board = board
 		self.gameOver = False
-		self.agentType = agentType
+		#self.agentType = agentType
 
 	def run(self):
 		while not self.gameOver:
 			print self.board			
 			
-			move = raw_input("Make move: ")
+			x, y = raw_input("Choose piece (format: x y): ").split()
+			direction = raw_input("Choose direction (format: NE or NW or SE or SW): ")
 
 			# change the board somehow
+			self.board.generateSuccessorBoard((int(x),int(y)), direction)
 
 			# check what agentType we have 
 				# make a move based on that agentType
