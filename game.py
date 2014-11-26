@@ -1,3 +1,5 @@
+from util import Tuple
+
 class Agent:
 	def __init__(self, index=0):
 		self.index = index
@@ -6,10 +8,15 @@ class Agent:
 		raiseNotDefined()
 
 class Move:
-	NORTHWEST = 'Northwest'
-	NORTHEAST = 'Northeast'
-	SOUTHWEST = 'Southwest'
-	SOUTHEAST = 'Southeast'
+	"""
+	unit tuples for adding to coordinates
+	"""
+	NW = (-1,-1)
+	NE = (-1,1)
+	SW = (1,-1)
+	SE = (1,1)
+	M  = 1
+	J  = 2
 
 class Board:
 	def __init__(self):
@@ -23,7 +30,7 @@ class Board:
 				 	  [1,0,1,0,1,0,1,0],
 					 ]
 
-		self.human = [(0,5),(2,5),(4,5),(6,5),(1,6),(3,6),(5,6),(7,6),(0,7),(2,7),(4,7),(6,7)]
+		self.pieces = [(0,5),(2,5),(4,5),(6,5),(1,6),(3,6),(5,6),(7,6),(0,7),(2,7),(4,7),(6,7)]
 		self.computer = [(1,0),(3,0),(5,0),(7,0),(0,1),(2,1),(4,1),(6,1),(1,2),(3,2),(5,2),(7,2)]
 
 	def __str__(self):
@@ -38,93 +45,55 @@ class Board:
 			counter += 1
 		return board 
 
-	def generateValidMoves(self, who): # I am so sorry this is the literal embodiment of spaghetti code
+	def generateValidMoves(self, who):
+		"""
+		input: who is 1 if human, -1 if computer
+		output: (coordinate, direction, magnitude)
+		where magnitude is 1 for no jump and 2 for jump
+		"""
 		valid_moves = []
 		valid_jumps = []
-		if who is 'computer':
-			for (x,y) in self.computer:
-				# SE
-				try:
-					if self.state[x+1][y+1] == 0: # if empty square
-						valid_moves.append(((x,y),'SE', 'M'))
-					elif self.state[x+1][y+1] > 0 and self.state[x+2][y+2] == 0: # if can jump over
-						valid_jumps.append(((x,y),'SE', 'J'))
-				except IndexError:
-					pass
-				# SW
-				try:
-					if self.state[x+1][y-1] == 0: # if empty square
-						valid_moves.append(((x,y),'SW', 'M'))
-					elif self.state[x+1][y-1] > 0 and self.state[x+2][y-2] == 0: # if can jump over
-						valid_jumps.append(((x,y),'SW', 'J'))
-				except IndexError:
-					pass
-				# if current square contains a king, consider north moves too
-				if self.state[x][y] == -2:
-					# NE
+		if who is 1: # human
+			pieces_to_choose = self.human
+		else: # computer
+			pieces_to_choose = self.computer
+		for (x,y) in pieces_to_choose:
+			current_piece = self.state[x][y]
+			# if the piece can move south, figure out possible SE and SW moves
+			if abs(current_piece) is 2 or current_piece < 0:
+				# for both SE and SW
+				for direction in [Move.SE, Move.SW]:
 					try:
-						if self.state[x-1][y+1] == 0: # if empty square
-							valid_moves.append(((x,y),'NE', 'M'))
-						elif self.state[x-1][y+1] > 0 and self.state[x-2][y+2] == 0: # if can jump over
-							valid_jumps.append(((x,y),'NE', 'J'))
-					except IndexError:
+						nx,ny = Tuple.add((x,y),direction)
+						new_square = self.state[nx][ny]
+						jx,jy = Tuple.add((nx,ny),direction)
+						if not new_square: # if empty square
+							valid_moves.append((x,y), direction, Move.M)
+						elif -1*who*new_square > 0 and not self.state[jx][jy]: # if can jump over
+							valid_jumps.append((x,y), direction, Move.J)
+					except IndexError: # ignore move if it would go out of bounds
 						pass
-					# NW
+			# if the piece can move north, figure out possible NE and NW moves
+			if abs(current_piece) is 2 or current_piece > 0:
+				# for both NE and NW
+				for direction in [Move.NE, Move.NW]:
 					try:
-						if self.state[x-1][y-1] == 0: # if empty square
-							valid_moves.append(((x,y),'NW', 'M'))
-						elif self.state[x-1][y-1] > 0 and self.state[x-2][y-2] == 0: # if can jump over
-							valid_jumps.append(((x,y),'NW', 'J'))
-					except IndexError:
+						nx,ny = Tuple.add((x,y),direction)
+						new_square = self.state[nx][ny]
+						jx,jy = Tuple.add((nx,ny),direction)
+						if not new_square: # if empty square
+							valid_moves.append((x,y),direction, Move.M)
+						elif -1*who*new_square > 0 and not self.state[jx][jy]: # if can jump over
+							valid_jumps.append((x,y), direction, Move.J)
+					except IndexError: # ignore move if it would go out of bounds
 						pass
-			# if a jump can be made, the computer has to jump
-			if len(valid_jumps) > 0:
-				return valid_jumps
-			else:
-				return valid_moves
-		else: # if human
-			for (x,y) in self.human:
-				# if current square contains king, consider south moves too
-				if self.state[x][y] == 2:
-					# SE
-					try:
-						if self.state[x+1][y+1] == 0: # if empty square
-							valid_moves.append(((x,y),'SE', 'M'))
-						elif self.state[x+1][y+1] < 0 and self.state[x+2][y+2] == 0: # if can jump over
-							valid_jumps.append(((x,y),'SE', 'J'))
-					except IndexError:
-						pass
-					# SW
-					try:
-						if self.state[x+1][y-1] == 0: # if empty square
-							valid_moves.append(((x,y),'SW', 'M'))
-						elif self.state[x+1][y-1] < 0 and self.state[x+2][y-2] == 0: # if can jump over
-							valid_jumps.append(((x,y),'SW', 'J'))
-					except IndexError:
-						pass
-				# NE
-				try:
-					if self.state[x-1][y+1] == 0: # if empty square
-						valid_moves.append(((x,y),'NE', 'M'))
-					elif self.state[x-1][y+1] < 0 and self.state[x-2][y+2] == 0: # if can jump over
-						valid_jumps.append(((x,y),'NE', 'J'))
-				except IndexError:
-					pass
-				# NW
-				try:
-					if self.state[x-1][y-1] == 0: # if empty square
-						valid_moves.append(((x,y),'NW', 'M'))
-					elif self.state[x-1][y-1] < 0 and self.state[x-2][y-2] == 0: # if can jump over
-						valid_jumps.append(((x,y),'NW', 'J'))
-				except IndexError:
-					pass
-			# if a jump can be made, the person has to jump
-			if len(valid_jumps) > 0:
-				return valid_jumps
-			else:
-				return valid_moves
+		# if a jump can be made, the person has to jump
+		if len(valid_jumps) > 0:
+			return valid_jumps
+		else:
+			return valid_moves
 
-	def generateSuccessorBoard(self, pos, direction, jump=False):
+	def generateSuccessorBoard(self, pos, direction, magnitude):
 		x, y = pos
 		piece = self.state[x][y]
 		dist = 1
@@ -148,16 +117,17 @@ class Game:
 		self.agentType = agentType
 
 	def run(self):
+		direct_dict = {'NW':(-1,-1), 'NE':(-1,1), 'SW':(1,-1), 'SE':(1,1)}
 		while not self.gameOver:
 			print self.board			
 			
 			x, y = raw_input("Choose piece (format: x y): ").split()
 			x = int(x)
 			y = int(y)
-			direction = raw_input("Choose direction (format: NE or NW or SE or SW): ")
-			moves = self.board.generateValidMoves('human')
+			direction = direct_dict(raw_input("Choose direction (format: NE or NW or SE or SW): "))
+			moves = self.board.generateValidMoves(1)
 			# change the board somehow
-			if ((x,y),direction,'M') in moves:
+			if ((x,y),direction,) in moves:
 				self.board.generateSuccessorBoard((x,y),direction)
 			elif ((x,y),direction,'J') in moves:
 				self.board.generateSuccessorBoard((x,y),direction, True)
