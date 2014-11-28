@@ -1,20 +1,15 @@
-import random
+from agents import RandomAgent
 import sys
-
-class Agent:
-	def getAction(self, state):
-		raiseNotDefined()
-
-class RandomAgent:
-	def getAction(self, state):
-		moves = state.generateValidMoves(-1)
-		return random.choice(moves)
 
 class Game:
 	def __init__(self, board, agentType=None):
 		self.board = board
 		self.gameOver = False
-		self.agent = RandomAgent()
+		if not agentType:
+			self.agent = RandomAgent()
+		else:
+			# update with agent selection
+			pass
 
 	def run(self):
 		direct_dict = {'NW':(-1,-1), 'NE':(-1,1), 'SW':(1,-1), 'SE':(1,1)}
