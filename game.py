@@ -1,4 +1,5 @@
 import random
+import sys
 
 class Agent:
 	def getAction(self, state):
@@ -20,10 +21,14 @@ class Game:
 		while not self.gameOver:
 			print self.board			
 			
+			moves = self.board.generateValidMoves(1)
+			if not len(moves): # if no human moves possible
+				print "You lose!"
+				sys.exit(0)
+
 			# switch the x and y coordinates to get correct position
 			y, x, direction = raw_input("Make move (ex: 0 5 NE): ").split()
 			direction = direct_dict[direction]
-			moves = self.board.generateValidMoves(1)
 			
 			# change from string to int
 			x = int(x)
@@ -41,6 +46,11 @@ class Game:
 				print "not valid move"
 				continue
 
+			if not len(self.board.generateValidMoves(-1)): # if no possible computer moves
+				print self.board
+				print "You win!"
+				sys.exit(0)
+				
 			# get action
 			((x,y), direction, distance) = self.agent.getAction(self.board) 
 

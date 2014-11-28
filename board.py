@@ -82,9 +82,9 @@ class Board:
 						nx,ny = TupleMath.add((x,y),direction)
 						new_square = self.getValue(nx,ny)
 						jx,jy = TupleMath.add((nx,ny),direction)
-						if not new_square: # if empty square
+						if not new_square and self.onBoard(nx,ny): # if empty square
 							valid_moves.append(((x,y), direction, Move.M))
-						elif -1*who*new_square > 0 and not self.getValue(jx,jy): # if can jump over
+						elif -1*who*new_square > 0 and not self.getValue(jx,jy) and self.onBoard(nx,ny) and self.onBoard(jx,jy): # if can jump over
 							valid_jumps.append(((x,y), direction, Move.J))
 					except IndexError: # ignore move if it would go out of bounds
 						pass
@@ -96,9 +96,9 @@ class Board:
 						nx,ny = TupleMath.add((x,y),direction)
 						new_square = self.getValue(nx,ny)
 						jx,jy = TupleMath.add((nx,ny),direction)
-						if not new_square: # if empty square
+						if not new_square and self.onBoard(nx,ny): # if empty square
 							valid_moves.append(((x,y),direction, Move.M))
-						elif -1*who*new_square > 0 and not self.getValue(jx,jy): # if can jump over
+						elif -1*who*new_square > 0 and not self.getValue(jx,jy) and self.onBoard(nx,ny) and self.onBoard(jx,jy): # if can jump over
 							valid_jumps.append(((x,y), direction, Move.J))
 					except IndexError: # ignore move if it would go out of bounds
 						pass
