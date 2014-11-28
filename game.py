@@ -4,16 +4,17 @@ import sys
 class Game:
 	def __init__(self, board, agentType=None):
 		self.board = board
-		self.gameOver = False
 		if not agentType:
 			self.agent = RandomAgent()
 		else:
 			# update with agent selection
-			pass
+			agent_dict = {"RandomAgent":RandomAgent,"MinimaxAgent":MinimaxAgent,"AStarAgent":AStarAgent}
+			agent_class = agent_dict[agentType]
+			self.agent = agent_class()
 
 	def run(self):
 		direct_dict = {'NW':(-1,-1), 'NE':(-1,1), 'SW':(1,-1), 'SE':(1,1)}
-		while not self.gameOver:
+		while True:
 			print self.board			
 			
 			moves = self.board.generateValidMoves(1)
