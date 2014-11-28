@@ -50,7 +50,7 @@ class Game:
 				print self.board
 				print "You win!"
 				sys.exit(0)
-				
+
 			# get action
 			((x,y), direction, distance) = self.agent.getAction(self.board) 
 

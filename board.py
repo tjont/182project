@@ -123,6 +123,11 @@ class Board:
 		self.removePiece(nx,ny)
 		# set new position to have the value of the original piece, and add to list
 		mx,my = TupleMath.add((x,y),TupleMath.c_multiple(magnitude,direction))
-		self.setValue(mx,my,piece)
+		if piece is 1 and mx is 0: # if the human reached the top
+			self.setValue(mx,my,2)
+		elif piece is -1 and mx is 7: # if the computer reached the bottom
+			self.setValue(mx,my,-2)
+		else:
+			self.setValue(mx,my,piece)
 		self.addPiece(mx,my,piece)
 	
