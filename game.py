@@ -1,4 +1,6 @@
 from agents import RandomAgent
+from agents import MinimaxAgent
+from agents import AStarAgent
 import sys
 
 class Game:
