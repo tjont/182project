@@ -2,11 +2,13 @@ import sys
 import inspect
 import heapq, random
 
-class Tuple:
+class TupleMath:
+    @staticmethod
     def add(t1, t2):
         x1,y1 = t1
         x2,y2 = t2
         return (x1+x2,y1+y2)
+    @staticmethod
     def c_multiple(c,t):
         x,y = t
         return (c*x,c*y)
