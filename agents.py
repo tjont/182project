@@ -27,9 +27,28 @@ class MinimaxAgent(Agent):
 			return #heuristic value (TODO)
 
 		if player is -1: # computer: the maximizing player
-			pass
+			# for each possible move
+			for move in moves:
+				# make a new board
+				next_state = copy.deepcopy(state.generateSuccessorBoard(*move))
+				# recurse
+				alpha = max(alpha, self.alpha_beta(next_state, depth, alpha, beta, 1))
+
+				if beta <= alpha:
+					break # prune branches
+			return alpha
+
 		else: # human: the minimizing player
-			pass
+			# for each possible move 
+			for move in moves:
+				# make a new board
+				next_state = copy.deepcopy(state.generateSuccessorBoard(*move))
+				# recurse
+				beta = min(beta, self.alpha_beta(next_state, depth-1, alpha, beta, -1))
+				
+				if beta <= alpha:
+					break # prune branches 
+			return beta
 
 class AStarAgent(Agent):
 	def getAction(self, gameState):
