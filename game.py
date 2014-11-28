@@ -1,39 +1,49 @@
-class Agent:
-	def __init__(self, index=0):
-		self.index = index
+import random
 
+class Agent:
 	def getAction(self, state):
 		raiseNotDefined()
 
-class Move:
-	NORTHWEST = 'Northwest'
-	NORTHEAST = 'Northeast'
-	SOUTHWEST = 'Southwest'
-	SOUTHEAST = 'Southeast'
+class RandomAgent:
+	def getAction(self, state):
+		moves = state.generateValidMoves('computer')
+		return random.choice(moves)
 
 class Game:
 	def __init__(self, board, agentType=None):
 		self.board = board
 		self.gameOver = False
-		self.agentType = agentType
+		self.agent = RandomAgent()
 
 	def run(self):
 		while not self.gameOver:
 			print self.board			
 			
-			x, y = raw_input("Choose piece (format: x y): ").split()
-			direction = raw_input("Choose direction (format: NE or NW or SE or SW): ")
+			# switch the x and y coordinates to get correct position
+			y, x, direction = raw_input("Make move (ex: 0 5 NE): ").split()
 			moves = self.board.generateValidMoves('human')
-			if ((x,y),direction,'M') in moves or ((x,y),direction,'J') in moves:
+			
+			# change from string to int
+			x = int(x)
+			y = int(y)
+
+			if ((x,y),direction,'M') in moves:
 				print "valid move"
-			# change the board somehow
-			self.board.generateSuccessorBoard((int(x),int(y)), direction)
+				# change board accordingly
+				self.board.generateSuccessorBoard((x,y), direction, 'M', 'human')
+			elif ((x,y),direction,'J') in moves:
+				print "valid move"
+				# change board accordingly
+				self.board.generateSuccessorBoard((x,y), direction, 'J', 'human')
+			else:
+				print "not valid move"
+				continue
 
-			# check what agentType we have 
-				# make a move based on that agentType
+			# get action
+			((x,y), direction, distance) = self.agent.getAction(self.board) 
 
-
-
+			# move
+			self.board.generateSuccessorBoard((x,y), direction, distance, 'computer')
 
 
 

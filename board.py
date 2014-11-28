@@ -105,22 +105,119 @@ class Board:
 				# if can jump over
 				elif self.onBoard(x-1,y-1) and self.state[x-1][y-1] < 0 and self.onBoard(x-2,y-2) and self.state[x-2][y-2] == 0:
 					valid_jumps.append(((x,y),'NW', 'J'))
-			
-			# if a jump can be made, the person has to jump
-			if len(valid_jumps) > 0:
-				return valid_jumps
-			else:
-				return valid_moves
 
-	def generateSuccessorBoard(self, pos, direction):
+			# let human make jump or not
+			return valid_jumps + valid_moves 
+
+	def generateSuccessorBoard(self, pos, direction, distance, who):
 		x, y = pos
+		
+		# get what type of piece it is -2,-1,0,1,2
 		piece = self.state[x][y]
-		self.state[x][y] = 0
+		
+		# move piece
 		if direction == 'NW':
-			self.state[x-1][y-1] = piece
+
+			# if a single move
+			if distance == 'M':
+				self.state[x-1][y-1] = piece
+
+				if who == 'human':
+					self.human.append((x-1,y-1))
+				else:
+					self.computer.append((x-1,y-1))
+
+			# if a jump
+			else:
+				self.state[x-2][y-2] = piece
+				self.state[x-1][y-1] = 0
+
+				if who == 'human':
+					self.human.append((x-2,y-2))
+					self.computer.remove((x-1,y-1))
+				else:
+					self.computer.append((x-2,y-2))
+					self.human.append((x-1,y-1))
+
 		if direction == 'NE':
-			self.state[x-1][y+1] = piece
+
+			# if a single move
+			if distance == 'M':
+				self.state[x-1][y+1] = piece
+
+				if who == 'human':
+					self.human.append((x-1,y+1))
+				else:
+					self.computer.append((x-1,y+1))
+
+			# if a jump
+			else:
+				self.state[x-2][y+2] = piece
+				self.state[x-1][y+1] = 0
+
+				if who == 'human':
+					self.human.append((x-2,y+2))
+					self.computer.remove((x-1,y+1))
+				else:
+					self.computer.append((x-2,y+2))
+					self.human.remove((x-1,y+1))
+		
 		if direction == 'SE':
-			self.state[x+1][y+1] = piece
+			
+			# in a single move
+			if distance == 'M':
+				self.state[x+1][y+1] = piece
+
+				if who == 'human':
+					self.human.append((x+1,y+1))
+				else:
+					self.computer.append((x+1,y+1))
+
+			# if a jump
+			else:
+				self.state[x+2][y+2] = piece
+				self.state[x+1][y+1] = 0
+
+				if who == 'human':
+					self.human.append((x+2,y+2))
+					self.computer.remove((x+1,y+1))
+				else:
+					self.computer.append((x+2,y+2))
+					self.human.remove((x+1,y+1))
+		
 		if direction == 'SW':
-			self.state[x+1][y-1] = piece
+
+			# if a single move
+			if distance == 'M':
+				self.state[x+1][y-1] = piece
+
+				if who == 'human':
+					self.human.append((x+1,y-1))
+				else:
+					self.computer.append((x+1,y-1))
+
+			# if a jump
+			else:
+				self.state[x+2][y-2] = piece
+				self.state[x+1][y-1] = 0
+
+				if who == 'human':
+					self.human.append((x+2,y-2))
+					self.computer.remove((x+1,y-1))
+				else:
+					self.computer.append((x+2,y-2))
+					self.human.remove((x+1,y-1))
+
+		# make original position 0
+		self.state[x][y] = 0
+
+
+		# take original position out of list
+		if who == 'human':
+			self.human.remove((x,y))
+		else:
+			self.computer.remove((x,y))
+
+
+
+
