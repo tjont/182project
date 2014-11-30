@@ -24,8 +24,18 @@ class Board:
 				 	  [1,0,1,0,1,0,1,0],
 					 ]
 
-		self.human = [(5,0),(5,2),(5,4),(5,6),(6,1),(6,3),(6,5),(6,7),(7,0),(7,2),(7,4),(7,6)]
-		self.computer = [(0,1),(0,3),(0,5),(0,7),(1,0),(1,2),(1,4),(1,6),(2,1),(2,3),(2,5),(2,7)]
+		self.agent1 = [(5,0),(5,2),(5,4),(5,6),(6,1),(6,3),(6,5),(6,7),(7,0),(7,2),(7,4),(7,6)]
+		self.agent2 = [(0,1),(0,3),(0,5),(0,7),(1,0),(1,2),(1,4),(1,6),(2,1),(2,3),(2,5),(2,7)]
+
+		self.pointBoard = [[0,4,0,4,0,4,0,4],
+						   [4,0,3,0,3,0,3,0],
+						   [0,3,0,2,0,2,0,4],
+						   [4,0,2,0,1,0,3,0],
+						   [0,3,0,1,0,2,0,4],
+						   [4,0,2,0,2,0,3,0],
+						   [0,3,0,3,0,3,0,4],
+						   [4,0,4,0,4,0,4,0],
+						  ]
 
 	def __str__(self):
 		""
@@ -42,23 +52,29 @@ class Board:
 	def getValue(self,x,y):
 		return self.state[x][y]
 
+	def getPieces(self, who):
+		if who == 1:
+			return self.agent1
+		else:
+			return self.agent2
+
 	def setValue(self,x,y,val):
 		self.state[x][y] = val
 
 	def removePiece(self,x,y):
 		try:
-			self.human.remove((x,y))
+			self.agent1.remove((x,y))
 		except ValueError:
 			try:
-				self.computer.remove((x,y))
+				self.agent2.remove((x,y))
 			except ValueError:
 				pass
 
 	def addPiece(self,x,y,who):
 		if who > 0:
-			self.human.append((x,y))
+			self.agent1.append((x,y))
 		else:
-			self.computer.append((x,y))
+			self.agent2.append((x,y))
 
 	# check if piece is on board
 	def onBoard(self, x, y):
@@ -69,9 +85,9 @@ class Board:
 		valid_moves = []
 		valid_jumps = []
 		if who is 1:
-			to_choose_from = self.human
+			to_choose_from = self.agent1
 		else:
-			to_choose_from = self.computer
+			to_choose_from = self.agent2
 		for (x,y) in to_choose_from:
 			current_piece = self.getValue(x,y)
 			# if the piece can move south, figure out SE and SW
