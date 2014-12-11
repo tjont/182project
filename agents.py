@@ -38,7 +38,7 @@ class MinimaxAgent(Agent):
 		if player is self.who: # the maximizing player
 			low_max_score = float("-inf")
 			low_max_state= None
-			high_max_score = float("inf")
+			high_max_score = float("-inf")
 			high_max_state = None
 
 			# take only two most promising moves
@@ -63,22 +63,47 @@ class MinimaxAgent(Agent):
 						high_max_state = next_state
 			
 			# for two top states
-			for move in [low_max_state, high_max_state]:
+			for next_state in [low_max_state, high_max_state]:
 				# recurse
-				alpha = max(alpha, self.alpha_beta(next_state, depth, alpha, beta, 1))
+				if next_state != None:
+					alpha = max(alpha, self.alpha_beta(next_state, depth, alpha, beta, 1))
 
 				if beta <= alpha:
 					break # prune branches
 			return alpha
 
 		else: # human: the minimizing player
-			# for each possible move 
+			low_min_score = float("inf")
+			low_min_state= None
+			high_min_score = float("inf")
+			high_min_state = None
+
+			# take only two most promising moves
 			for move in moves:
 				# make a new board
 				next_state = copy.deepcopy(state)
 				next_state.generateSuccessorBoard(*move)
+
+				# get score
+				score = self.heuristic(next_state)
+
+				if (score < low_min_score):
+					# lower than both top scores
+					if (score < high_min_score):
+						low_min_score = high_min_score
+						low_min_state = high_min_state
+						high_min_score = score
+						high_min_state = next_state
+					# lower than only low_max_score
+					else:
+						low_min_score = score
+						high_min_state = next_state
+
+			# for lowest two states
+			for next_state in [low_min_state, high_min_state]:
 				# recurse
-				beta = min(beta, self.alpha_beta(next_state, depth-1, alpha, beta, -1))
+				if next_state != None:
+					beta = min(beta, self.alpha_beta(next_state, depth-1, alpha, beta, -1))
 
 				if beta <= alpha:
 					break # prune branches 

@@ -38,12 +38,11 @@ class Game:
 		# "who" is the agent who lost
 		if who == 1:
 			self.agent2_wins += 1
-			print "Agent 2 wins with " + str(len(self.agent2_moves)) + " moves\n"
-			#print "Average time per move: " + str(sum(self.agent2_times) / len(self.agent2_times))[:5] + " seconds"
 		else:
 			self.agent1_wins += 1
-			print "Agent 1 wins with " + str(len(self.agent1_moves)) + " moves\n"
-			#print "Average time per move: " + str(sum(self.agent1_times) / len(self.agent1_times))[:5] + " seconds"
+		
+		print ('Agent 1: {:d} moves, {:f} avg time per move'.format(len(self.agent1_moves), (sum(self.agent1_times) / len(self.agent1_times))))
+		print ('Agent 2: {:d} moves, {:f} avg time per move'.format(len(self.agent2_moves), (sum(self.agent2_times) / len(self.agent2_times))))
 		
 		if self.simulations != 0:
 			# reset all the single game statistics
@@ -59,8 +58,8 @@ class Game:
 
 		else:
 			print "================ TOTALS ================"
-			print "Agent 1 won " + str(self.agent1_wins) + " times"
-			print "Agent 2 won " + str(self.agent2_wins) + " times"
+			print "Agent 1 won " + str(self.agent1_wins) + "/" + str(self.agent1_wins + self.agent2_wins)
+			print "Agent 2 won " + str(self.agent2_wins) + "/" + str(self.agent1_wins + self.agent2_wins)
 			sys.exit(0)
 
 
