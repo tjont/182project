@@ -6,6 +6,7 @@ Minimax, Greedy, Random and Human.
 '''
 import random
 from random import randint
+from heuristics import Heuristic
 import copy
 
 class Agent:
@@ -15,6 +16,8 @@ class Agent:
 class MinimaxAgent(Agent):
 	def __init__(self, who):
 		self.who = who
+		heur = Heuristic()
+		self.heuristic = heur.simple
 
 	def getAction(self, gameState):
 		moves = gameState.generateValidMoves(self.who)
@@ -27,7 +30,7 @@ class MinimaxAgent(Agent):
 		for move in moves:
 			next_state = copy.deepcopy(gameState)
 			next_state.generateSuccessorBoard(*move)
-			utility = self.alpha_beta(next_state,3,float("-inf"),float("inf"),self.who * -1)
+			utility = self.alpha_beta(next_state,5,float("-inf"),float("inf"),self.who * -1)
 			if utility > max_utility:
 				max_utility = utility
 				best_move = move
@@ -39,7 +42,7 @@ class MinimaxAgent(Agent):
 
 		# if reached depth limit or no more possible moves (endgame)
 		if depth is 0 or not len(moves):
-			return self.heuristic(state)
+			return self.heuristic(state, self.who)
 
 		if player is self.who: # the maximizing player
 			low_max_score = float("-inf")
@@ -54,7 +57,7 @@ class MinimaxAgent(Agent):
 				next_state.generateSuccessorBoard(*move)
 
 				# get score
-				score = self.heuristic(next_state)
+				score = self.heuristic(next_state, self.who)
 
 				if (score > low_max_score):
 					# higher than both top scores
@@ -91,7 +94,7 @@ class MinimaxAgent(Agent):
 				next_state.generateSuccessorBoard(*move)
 
 				# get score
-				score = self.heuristic(next_state)
+				score = self.heuristic(next_state, self.who*-1)
 
 				if (score < low_min_score):
 					# lower than both top scores
@@ -114,7 +117,7 @@ class MinimaxAgent(Agent):
 				if beta <= alpha:
 					break # prune branches 
 			return beta
-
+	'''
 	def heuristic(self, gameState):
 		score = 0
 		num_opp_pieces = len(gameState.getPieces(self.who * -1))
@@ -143,10 +146,13 @@ class MinimaxAgent(Agent):
 		score += randint(1,3)
 		
 		return score
+	'''
 
 class GreedyAgent(Agent):
 	def __init__(self, who):
 		self.who = who
+		heur = Heuristic()
+		self.heuristic = heur.simple
 
 	def getAction(self, gameState):
 		# generate valid moves
@@ -164,7 +170,7 @@ class GreedyAgent(Agent):
 			next_state.generateSuccessorBoard(*move)
 			
 			# get the score for that state
-			score = self.heuristic(next_state)
+			score = self.heuristic(next_state, self.who)
 
 			# check if it is the best score so far
 			if (score > best_score):
@@ -172,7 +178,7 @@ class GreedyAgent(Agent):
 				best_score = score
 
 		return best_move
-
+	'''
 	def heuristic(self, gameState):
 
 		score = 0
@@ -188,6 +194,7 @@ class GreedyAgent(Agent):
 		score += randint(1,3)
 		
 		return score
+	'''
 
 class RandomAgent(Agent):
 	def __init__(self, who):
