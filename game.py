@@ -44,7 +44,7 @@ class Game:
 		print ('Agent 1: {:d} moves, {:f} avg time per move'.format(len(self.agent1_moves), (sum(self.agent1_times) / len(self.agent1_times))))
 		print ('Agent 2: {:d} moves, {:f} avg time per move'.format(len(self.agent2_moves), (sum(self.agent2_times) / len(self.agent2_times))))
 		
-		if self.simulations != 0:
+		if self.simulations >= 1:
 			# reset all the single game statistics
 			self.agent1_moves = []
 			self.agent2_moves = []
