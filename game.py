@@ -1,6 +1,6 @@
 from agents import RandomAgent
 from agents import MinimaxAgent
-from agents import AStarAgent
+from agents import GreedyAgent
 from agents import HumanAgent
 from board import Board
 
@@ -14,7 +14,7 @@ class Game:
 		# number of times to simulate
 		self.simulations = int(simulations)
 
-		agent_dict = {"RandomAgent":RandomAgent,"MinimaxAgent":MinimaxAgent,"AStarAgent":AStarAgent,"HumanAgent":HumanAgent}
+		agent_dict = {"RandomAgent":RandomAgent,"MinimaxAgent":MinimaxAgent,"GreedyAgent":GreedyAgent,"HumanAgent":HumanAgent}
 		
 		agent_class1 = agent_dict[agentType1]
 		agent_class2 = agent_dict[agentType2]

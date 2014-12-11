@@ -70,12 +70,52 @@ class MinimaxAgent(Agent):
 
 		# subtract away the opponents pieces, aka less pieces for them is good for us
 		score -= len(gameState.getPieces(self.who * -1))
+
+		# an attacking strategy if near the end
+		#if (lenI)
 		
 		return score
 
-class AStarAgent(Agent):
+class GreedyAgent(Agent):
+	def __init__(self, who):
+		self.who = who
+
 	def getAction(self, gameState):
-		raiseNotDefined()
+		moves = gameState.generateValidMoves(self.who)
+
+		if not len(moves):
+			return 0
+
+		best_move = None
+		best_score = float("-inf")
+
+		for move in moves:
+			next_state = copy.deepcopy(gameState)
+			next_state.generateSuccessorBoard(*move)
+			
+			score = self.heuristic(next_state)
+
+			if (score > best_score):
+				best_move = move
+				best_score = score
+
+		return best_move
+
+	def heuristic(self, gameState):
+
+		score = 0
+		
+		# for each piece find its position value 
+		for (x,y) in gameState.getPieces(self.who):
+			score += gameState.pointBoard[x][y]
+
+		# subtract away the opponents pieces, aka less pieces for them is good for us
+		score -= len(gameState.getPieces(self.who * -1))
+
+		# an attacking strategy if near the end
+		#if (lenI)
+		
+		return score
 
 class RandomAgent(Agent):
 	def __init__(self, who):
