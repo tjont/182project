@@ -1,3 +1,10 @@
+'''
+util.py
+
+TupleMath very important for making moves.
+'''
+
+
 import sys
 import inspect
 import heapq, random

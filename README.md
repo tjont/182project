@@ -8,9 +8,6 @@
 * Negative numbers are computer
 * 1 is regular piece, 2 is promoted piece
 * Possible values: -2, -1, 0, 1, 2
-* **Storing temporary successor states?**
-  * Do we need to do this for searching minimax to a depth of 5? 
-  * We should figure out what one of the earlier psets did for this.
 
 ## Piece location
 We should probably keep track of where each player's pieces are in two separate lists of coordinates so that we don't have to search through 64 spaces to find possible successor moves. This just means more work when it comes to updating the board after a move is taken.

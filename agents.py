@@ -1,3 +1,9 @@
+'''
+agents.py
+
+This file contains the different types of agents that are used to play checkers.
+Minimax, Greedy, Random and Human.
+'''
 import random
 from random import randint
 import copy

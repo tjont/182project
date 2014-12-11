@@ -1,3 +1,11 @@
+"""
+board.py
+
+Contains information about the board, known as a gameState in other files.
+Also has code that generates valid moves and successor boards.
+
+"""
+
 from util import TupleMath
 import math
 

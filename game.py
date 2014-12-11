@@ -1,3 +1,11 @@
+"""
+game.py
+
+Control flow of program. In charge of alternating player turns and running
+the desired number of simulations. As well as printing board state and 
+relevant statistics.
+"""
+
 from agents import RandomAgent
 from agents import MinimaxAgent
 from agents import GreedyAgent
