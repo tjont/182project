@@ -1,4 +1,5 @@
 from util import TupleMath
+import math
 
 class Move:
 	"""
@@ -80,6 +81,13 @@ class Board:
 	def onBoard(self, x, y):
 		return x >= 0 and x <= 7 and y >= 0 and y <= 7
 
+	# given a piece, sum distances to opponents pieces
+	def distanceToEnemy(self, who, x1, y1):
+		total_sum = 0
+		for (x2,y2) in (self.getPieces(who * -1)):
+			total_sum += math.sqrt((y2 - y1)**2 + (x2-x1)**2)
+		return total_sum
+
 	def generateValidMoves(self, who):
 
 		valid_moves = []
@@ -125,7 +133,6 @@ class Board:
 			return valid_moves 
 
 	def generateSuccessorBoard(self, (x,y), direction, magnitude):
-		#x, y = pos
 		
 		# get piece value
 		piece = self.getValue(x,y)

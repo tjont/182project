@@ -1,4 +1,5 @@
 import random
+from random import randint
 import copy
 
 class Agent:
@@ -34,12 +35,35 @@ class MinimaxAgent(Agent):
 		if depth is 0 or not len(moves):
 			return self.heuristic(state)
 
-		if player is -1: # computer: the maximizing player
-			# for each possible move
+		if player is self.who: # the maximizing player
+			low_max_score = float("-inf")
+			low_max_state= None
+			high_max_score = float("inf")
+			high_max_state = None
+
+			# take only two most promising moves
 			for move in moves:
 				# make a new board
 				next_state = copy.deepcopy(state)
 				next_state.generateSuccessorBoard(*move)
+
+				# get score
+				score = self.heuristic(next_state)
+
+				if (score > low_max_score):
+					# higher than both top scores
+					if (score > high_max_score):
+						low_max_score = high_max_score
+						low_max_state = high_max_state
+						high_max_score = score
+						high_max_state = next_state
+					# higher than only low_max_score
+					else:
+						low_max_score = score
+						high_max_state = next_state
+			
+			# for two top states
+			for move in [low_max_state, high_max_state]:
 				# recurse
 				alpha = max(alpha, self.alpha_beta(next_state, depth, alpha, beta, 1))
 
@@ -61,18 +85,31 @@ class MinimaxAgent(Agent):
 			return beta
 
 	def heuristic(self, gameState):
-
 		score = 0
-		
-		# for each piece find its position value 
+		num_opp_pieces = len(gameState.getPieces(self.who * -1))
+		num_own_pieces = len(gameState.getPieces(self.who))
+
 		for (x,y) in gameState.getPieces(self.who):
+			# find "safety" value of pieces
 			score += gameState.pointBoard[x][y]
+			
+			# an attacking strategy if near the end
+			if (num_opp_pieces < 3 and num_own_pieces > 5):
+				# reward for kings that are closer to the other people
+				if (abs(gameState.state[x][y]) == 2):
+					distance = gameState.distanceToEnemy(self.who, x, y)
+					# only try to get far away kings
+					if (distance > 3):
+						score -= distance
+
+		# subtract number of pieces that are vulnerable
+		score -= len(gameState.generateValidMoves(self.who*-1))
 
 		# subtract away the opponents pieces, aka less pieces for them is good for us
-		score -= len(gameState.getPieces(self.who * -1))
+		score -= num_opp_pieces
 
-		# an attacking strategy if near the end
-		#if (lenI)
+		# add random element
+		score += randint(1,3)
 		
 		return score
 
@@ -81,6 +118,7 @@ class GreedyAgent(Agent):
 		self.who = who
 
 	def getAction(self, gameState):
+		# generate valid moves
 		moves = gameState.generateValidMoves(self.who)
 
 		if not len(moves):
@@ -90,11 +128,14 @@ class GreedyAgent(Agent):
 		best_score = float("-inf")
 
 		for move in moves:
+			# get next state
 			next_state = copy.deepcopy(gameState)
 			next_state.generateSuccessorBoard(*move)
 			
+			# get the score for that state
 			score = self.heuristic(next_state)
 
+			# check if it is the best score so far
 			if (score > best_score):
 				best_move = move
 				best_score = score
@@ -112,8 +153,8 @@ class GreedyAgent(Agent):
 		# subtract away the opponents pieces, aka less pieces for them is good for us
 		score -= len(gameState.getPieces(self.who * -1))
 
-		# an attacking strategy if near the end
-		#if (lenI)
+		# add random element
+		score += randint(1,3)
 		
 		return score
 
